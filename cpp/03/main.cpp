@@ -3,34 +3,19 @@ using namespace std;
 
 void solve() {
     int num_estatuas;
-    int deslocamento;
-    int pos;
-    int ant;
-    vector<int> estatuas;
+    long long int deslocamento;
+    int estatua_atual;
+    int num_guardas = 1;
+    int tmp;
 
-    cin >> num_estatuas >> deslocamento >> pos;
+    cin >> num_estatuas >> deslocamento >> estatua_atual;
     int cobertura_estatuas = (deslocamento * 2) + 1;
-    for (int i = 0; i < num_estatuas; i++) {// inserindo as estatuas 
-        estatuas.push_back(pos);
-        ant = pos;
-        cin >> pos;
-
-        if (pos - ant < cobertura_estatuas && 
-            pos != ant + 1) {
-            while (ant < pos) {
-                estatuas.push_back(0);
-                ant++;
-            }
+    for (int i = 1; i < num_estatuas; i++) {
+        cin >> tmp;
+        if (tmp >= estatua_atual + cobertura_estatuas) {
+            num_guardas++;
+            estatua_atual = tmp;
         }
-    }
-
-    int len = estatuas.size();
-    int num_guardas = 0;
-    for (int i = 0; i < len; i++) {
-        if (estatuas[i] == 0) continue;
-
-        num_guardas++;
-        i += cobertura_estatuas;
     }
 
     cout << num_guardas << endl;
