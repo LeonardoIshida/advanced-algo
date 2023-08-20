@@ -1,14 +1,14 @@
 #include <iostream>
 #include <map>
 #include <set>
+#include <vector>
 using namespace std;
 
-int num_materias;
-int num_matriculados;
-
 void solve() {
+    int num_materias;
+    int num_matriculados;
     map<int, set<int>> alunos;
-    map<int, int> materias;
+    vector<int> materias(100000, 0);
     int key_aluno;
 
     // inserindo os alunos nas materias, e contando quantos alunos tem em cada materia
@@ -19,9 +19,8 @@ void solve() {
         for (int j = 0; j < num_matriculados; j++) {
             cin >> key_aluno;
 
-            if (alunos[key_aluno].insert(i).second) {
+            if (alunos[key_aluno].insert(i).second) 
                 materias[i]++;
-            }
         }
     }
 
@@ -37,7 +36,7 @@ void solve() {
     for (int i = 0; i < num_materias; i++) {
         cout << materias[i] << " ";
     }
-    cout << "\n";
+    cout << endl;
 }
 
 int main() {
