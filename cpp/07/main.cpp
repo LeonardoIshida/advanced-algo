@@ -1,30 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+typedef long long int lli;
+
 struct aresta {
     int origem;
     int dest;
     int peso;
 };
 
-int solve(vector<aresta> arestas, int num_v, int num_a) {
-    vector<int> passou(num_v+1, 0);
-    int cont_a = 0;
-    int peso_total = 0;
+bool msm_grupo(vector<int>& pais, int v1, int v2) {
+    return pais[v1] == pais[v2];
+}
 
-    for (int i = 0; i < num_a; i++) {
-        if (passou[arestas[i].dest] == 0) {
-            passou[arestas[i].dest] = 1;
-            // passou[arestas[i].origem] = 1;
-            cont_a++;
-            peso_total += arestas[i].peso;
-            cout << "total: " << peso_total << endl;
-        }
+int encontrar_grupo(vector<int>& pais, int v) {
+    return pais[v] == v ? v : pais[v] = encontrar_grupo(pais, pais[v]);
+}
 
-        if (cont_a == num_v-1) return peso_total;
+void agrupar(vector<int>& pais, vector<int>& rank, int v1, int v2) {
+    if (msm_grupo(pais, v1, v2)) return;
+
+    int g1 = encontrar_grupo(pais, v1);
+    int g2 = encontrar_grupo(pais, v2);
+
+    if (rank[g1] > rank[g2]) {
+        pais[g2] = g1;
+    } 
+    else {
+        pais[g1] = g2;
+        if (rank[g1] == rank[g2]) 
+            rank[g2]++;
+    }
+}
+
+lli solve(vector<aresta> arestas, int num_v) {
+    vector<int> rank(num_v+1, 0);
+    vector<int> pais(num_v+1, -1);
+    for (int i = 0; i < num_v+1; i++)
+        pais[i] = i;
+
+    lli total = 0;
+    int mst_arestas = 0;
+    for (aresta aresta : arestas) {
+        int v1 = aresta.origem;
+        int v2 = aresta.dest;
+
+        if (encontrar_grupo(pais, v1) != encontrar_grupo(pais, v2)) {
+            agrupar(pais, rank, v1, v2);
+            total += aresta.peso;
+            mst_arestas++;
+        }   
     }
 
-    return -1;
+    return mst_arestas == num_v-1 ? total : -1;
 }
 
 int main() {
@@ -40,15 +68,12 @@ int main() {
         arestas.push_back({orig, dest, peso});
     }
 
+    // ordenando arestas pelo peso
     sort(arestas.begin(), arestas.end(), [](aresta &a1, aresta &a2) {
         return a1.peso < a2.peso;
     });
 
-    for (aresta a : arestas) {
-        cout << "origem: " << a.origem << "dest: " << a.dest << "peso: " << a.peso << endl;
-    }
-
-    cout << solve(arestas, num_v, num_a) << endl;
+    cout << solve(arestas, num_v) << endl;
 
     return 0;
 }
