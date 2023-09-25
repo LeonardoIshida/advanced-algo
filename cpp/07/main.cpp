@@ -50,9 +50,11 @@ lli solve(vector<aresta> arestas, int num_v) {
             total += aresta.peso;
             mst_arestas++;
         }   
+
+        if (mst_arestas == num_v-1) return total;
     }
 
-    return mst_arestas == num_v-1 ? total : -1;
+    return -1;
 }
 
 int main() {
