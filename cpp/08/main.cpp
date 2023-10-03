@@ -6,6 +6,8 @@ vector<int> visitado;
 vector<int> low;
 stack<int> pilha;
 vector<int> na_pilha;
+vector<int*> to_print;
+vector<pair<int, int*>> grupo;
 int num_v;
 int num_a;
 int num_cfc = 0;
@@ -18,11 +20,8 @@ void tarjan(int vert) {
     na_pilha[vert] = 1;
     tempo_atual += 1;
 
-    cout << "estou em " << vert << endl;
-
     for (int visinho : lista_adj[vert]) {
         if (visitado[visinho] == 0) {
-            // cout << "indo para " << visinho << endl;
             tarjan(visinho);
 
             low[vert] = min(low[vert], low[visinho]);
@@ -32,17 +31,37 @@ void tarjan(int vert) {
         }
     }
 
-    cout << "low[u] = " << low[vert] << " == visitado[vert] = " << visitado[vert] << endl;
     if (low[vert] == visitado[vert]) {
+        int aux;
+        int *g = (int *)malloc(sizeof(int));
         while (pilha.top() != vert) {
-            int v = pilha.top();
+
+            int v = pilha.top(); // tarjan
             na_pilha[v] = 0;
             pilha.pop();
+
+            to_print[v] = g; // printar resultado
+            aux = min(aux, v);
         }
-        int v = pilha.top();
+
+        int v = pilha.top(); // tarjan
         na_pilha[v] = 0;
         pilha.pop();
         num_cfc += 1;
+
+        aux = min(aux, v); // printar resultado
+        grupo.push_back(make_pair(aux, g));
+        to_print[v] = g;
+    }
+}
+
+void sort_e_atribui() {
+    sort(grupo.begin(), grupo.end(), [](const auto& a, const auto& b) { 
+        return a.first < b.first; 
+    });
+
+    for (int i = 0; i < grupo.size(); i++) {
+        *(grupo[i].second) = i+1;
     }
 }
 
@@ -50,11 +69,14 @@ void solve() {
     visitado.assign(num_v+1, 0);
     low.assign(num_v+1, -1);
     na_pilha.assign(num_v+1, 0);
+    to_print.resize(num_v+1);
 
     for (int i = 1; i < num_v+1; i++) {
         if (visitado[i] == 0)
             tarjan(i);
     }
+
+    sort_e_atribui();
 }
 
 int main() {
@@ -67,8 +89,13 @@ int main() {
 
         lista_adj[orig].push_back(dest);
     }
-    solve();
 
-    cout << "num cfc " << num_cfc << endl;
+    solve();
+    cout << num_cfc << endl;
+    for (int i = 1; i < num_v+1; i++) {
+        cout << *(to_print[i]) << " ";
+    }
+    cout << endl;
+    
     return 0;
 }
