@@ -10,9 +10,9 @@ long long int calcula_custo(int n) {
     return n >= n_musicas-1 ? custo[n_musicas-1] : custo[n];
 }
 
-long long int dp(long long int n) {
-    if (n >= n_musicas-1) return musicas[n_musicas-1];
-    if (custo[n] != 0) return musicas[n];
+long long int dp(int n) {
+    if (n >= n_musicas-1) return musicas[n_musicas-1]; // caso que estoura o vetor
+    if (custo[n] != 0) return musicas[n]; // ja calculado
     return custo[n] = min( calcula_custo(n+1) + abs(musicas[n] - dp(n+1)), 
                             calcula_custo(n+2) + abs(musicas[n] - dp(n+2)) );
 }
