@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long int llint;
 
-vector<vector<int>> mem;
+vector<vector<llint>> mem;
 vector<pair<int, int>> itens;
 int peso_max;
 int n;
@@ -19,19 +19,17 @@ void solve() {
                 );
         }
     }
-
-
 }
 
 int main() {
     cin >> n >> peso_max;
 
-    mem.resize(peso_max+1);
-    for (int i = 0; i < peso_max+1; i++)
-        mem[i].assign(n+1, 0);
+    mem.resize(n+1);
+    for (int i = 0; i < n+1; i++)
+        mem[i].assign(peso_max+1, 0);
 
     itens.resize(n+1);
-    itens[0] = make_pair(0, 0);
+    itens[0] = make_pair(0, 0); // primeiro item 0 peso e 0 valor
 
     for (int i = 1; i <= n; i++) {
         int p, valor;
@@ -41,12 +39,7 @@ int main() {
     }
 
     solve();
-    for (int i = 0; i <= peso_max; i++) {
-        for (int j = 0; j <= n; j++)
-            cout << mem[i][j] << " ";
-        cout << endl;
-    }
-    // cout << mem[n-1][peso_max-1] << endl;
+    cout << mem[n][peso_max] << endl;
 
     return 0;
 }
