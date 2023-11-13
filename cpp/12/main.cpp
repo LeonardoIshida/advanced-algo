@@ -7,78 +7,43 @@ int vertices;
 int max_subset;
 vector<vector<llint>> matriz;
 vector<vector<llint>> mem;
-vector<pair<llint, int>> resp;
-int vert_origem;
-
-void print_mat() {
-    for (int i = 0; i < vertices+1; i++) {
-        for (int j = 0; j < vertices+1; j++) {
-            cout << matriz[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
-
-void print_mem() {
-    for (int i = 1; i < vertices+1; i++) {
-        for (int j = 0; j < max_subset; j++) {
-            cout << mem[i][j] << " ";
-        }
-        cout << endl;
-    }
-}
 
 int calcula_mascara(int n) {
     return 1 << n;
 }
 
-llint pd(int u, int v, int mascara) {
-    if (mascara == max_subset-2) {
-        // cout << "alouuu" << endl;
-        return -1e15;
-    }
-    if (mem[v][mascara] != 0) return mem[v][mascara];
-
-    llint menor = 1e15;
+llint pd(int v, int mascara) {
+    if (mascara == max_subset-2) // visitei todos os vertices
+        return 0;
+    
+    if (mem[v][mascara] != 0) // resultado ja calculado
+        return mem[v][mascara];
+    
+    llint menor_custo = 1e9;
     for (int i = 1; i < vertices+1; i++) {
-        if (matriz[v][i] != 0 && !(mascara & calcula_mascara(i))) {
-            // matriz[v][i].second = true;
-            // cout << "indo para " << i << "com mascara = "<< (mascara | calcula_mascara(i)) << endl;
-            menor = min( 
-                pd(v, i, mascara ^ (calcula_mascara(i))) + matriz[v][i],
-                menor
+        // se vertice nao foi visitado, entao visitar
+        if (!(mascara & calcula_mascara(i))) {
+            // setando nova mascara
+            int nova_mascara = mascara | calcula_mascara(i);
+
+            // selecionando menor custo
+            menor_custo = min(
+                matriz[v][i] + pd(i, nova_mascara),
+                menor_custo
             );
-            // matriz[v][i].second = false;
-            // mascara = mascara | (!calcula_mascara(i));
         }
     }
-
-    // cout << "mem de v e mascara: " << v  << " " << mascara << " = " << menor << endl;
-    // print_mem();
-    mem[v][mascara] = menor;
-    return mem[v][mascara] == 1e15 ? 0 : mem[v][mascara];
+    
+    return mem[v][mascara] = menor_custo;
 }
 
 void solve() {
-    llint menor = 1e15;
-    for (vert_origem = 2; vert_origem < vertices+1; vert_origem++) {
-        if (matriz[1][vert_origem] != 0) {
-            // matriz[i][1].second = true;
-            // cout << "saindo de " << i << endl;
-            
-            pd(1, vert_origem, 2 | calcula_mascara(vert_origem));
-        
-            // matriz[i][1].second = false;
+    // partindo do vertice 1
+    int mascara = calcula_mascara(1);
+    llint resp = pd(1, mascara);
 
-            // printf("mascara = %d\n", 2|calcula_mascara(i));
-        }
-    }
-
-    // print_mem();
-    // cout << menor << endl;
-    // for (int i = 1; i < vertices+1; i++)
-    //     cout << mem[i][calcula_mascara(i) + 2] + matriz[1][i].first << " ";
-    // cout << endl;
+    // se resp == 1e9 nao existe caminho 
+    cout << (resp == 1e9 ? -1: resp) << endl;
 }
 
 int main() {
@@ -87,11 +52,11 @@ int main() {
     matriz.resize(vertices+1);
     mem.resize(vertices+1);
     max_subset = 1<<(vertices+1);
-    // cout << max_subset;
     
     for (int i = 0; i < vertices+1; i++) {
-        matriz[i].assign(vertices+1, 0);
+        matriz[i].assign(vertices+1, 1e9);
         mem[i].assign(max_subset, 0);
+        matriz[i][i] = 0;
     }
 
     for (int i = 0; i < arestas; i++) {
@@ -101,22 +66,8 @@ int main() {
         matriz[orig][dest] = peso;
         matriz[dest][orig] = peso;
     }
-    // print_mat();
+
     solve();
-    llint res = 1e15;
-    for (int i = 1; i < vertices+1; i++) {
-        if (mem[i][calcula_mascara(i) + 2] + matriz[1][i] > 1e9) {
-            cout << -1 << endl;
-            return 0;
-        }
-
-        res = min(
-            mem[i][calcula_mascara(i) + 2] + matriz[1][i],
-            res
-        );
-    }
-
-    cout << res+1e15 << endl;
 
     return 0;
 }
