@@ -1,64 +1,47 @@
 #include <bits/stdc++.h>
+
 using namespace std;
+
 typedef long long int llint;
+#define MAX 10000000
 
-llint max_prime;
 int n;
-vector<llint> num;
 vector<llint> primos;
-vector<bool> aux;
+bitset<MAX> crivo;
 
-void sieve_sundaram(llint maximo) {
-    max_prime = (maximo-1)/2;
-    aux.assign(max_prime+1, false);
+void criar_crivo() {
+    crivo.set();
+    crivo[0].flip();
+    crivo[1].flip();
 
-    for (int i = 1; i < max_prime; i++) {
-        for (int j = i; (i + j + 2*i*j) <= max_prime; j++) {
-            aux[i + j + 2*i*j] = true;
+    for (llint i = 2; i < MAX; i++) {
+        if (!crivo[i]) continue; // nao eh primo
+
+        for (llint j = i*i; j < MAX; j += i) {
+            crivo[j].flip();
         }
-    }
 
-    for (int i = 1; i <= max_prime; i++)
-        if (aux[i] == false)
-            primos.push_back(2*i + 1);
+        primos.push_back(i*i);
+    }
 }
 
-void solve() {
-    char resp[n];
-    
-    for (llint n : num) {
-        int divisores = 0;
-        for (llint p: primos) {
-            if (n % p == 0)
-                divisores++;
-            
-            if (divisores > 3) break;
-        }
-        if (divisores == 3)
-            strcat(resp, "1");
-        else 
-            strcat(resp, "0");
-
-    }
-
-    cout << resp << endl;
-
+bool solve(llint num) {
+    return binary_search(primos.begin(), primos.end(), num);
 }
 
 int main() {
     cin >> n;
-    num.resize(n);
+    criar_crivo();
 
-    llint maximo = -1;
     llint tmp;
     for (int i = 0; i < n; i++) {
         cin >> tmp;
-        maximo = max(tmp, maximo);
-        num[i] = tmp; 
+        if (solve(tmp))
+            cout << "1";
+        else 
+            cout << "0";
     }
-
-    sieve_sundaram(maximo);
-    solve();
+    cout << endl;
 
     return 0;
 }
