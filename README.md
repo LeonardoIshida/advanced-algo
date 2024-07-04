@@ -19,7 +19,7 @@
 <br>
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# About The Project
 
 Repository with all exercises done for the advanced algorithms subject from ICMC-USP. This subject includes some competitive programming concepts and algorithms like:
 - Greedy algorithms
@@ -29,7 +29,7 @@ Repository with all exercises done for the advanced algorithms subject from ICMC
 - Binary exponentiation
 - Hashing
   
-### Built With
+## ⚙️ Built With
 
 [![My Skills](https://skillicons.dev/icons?i=cpp)](https://skillicons.dev)
 
