@@ -19,17 +19,20 @@
 <br>
 
 <!-- ABOUT THE PROJECT -->
-# About The Project
+## About The Project
 
-Repository with all exercises done for the advanced algorithms subject from ICMC-USP. This subject includes some competitive programming concepts and algorithms like:
-- Greedy algorithms
-- Recursion
-- Dynamic programming
-- Bit mask
-- Binary exponentiation
-- Hashing
+This repository contains a collection of solutions to exercises completed for the Advanced Algorithms subject at ICMC-USP. The subject delves into various fundamental algorithms and data structures, with a focus on competitive programming techniques.
+
+**Topics Covered:**
+
+* **Greedy Algorithms:** Techniques for constructing optimal solutions by making locally optimal choices at each step.
+* **Recursion:** Solving problems by breaking them down into smaller, self-similar subproblems.
+* **Dynamic Programming:** Optimizing recursive solutions by storing and reusing the results of overlapping subproblems.
+* **Bit Manipulation:** Utilizing bitwise operations for efficient data representation and manipulation.
+* **Binary Exponentiation:** A fast and efficient method for calculating exponentiation.
+* **Hashing:** Techniques for efficiently storing and retrieving data using hash functions.
   
-## ⚙️ Built With
+### Built With
 
 [![My Skills](https://skillicons.dev/icons?i=cpp)](https://skillicons.dev)
 
